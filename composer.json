@@ -18,6 +18,8 @@
         "symfony/yaml": "6.2.*"
     },
     "require-dev": {
+        "codeception/codeception": "^5.0",
+        "codeception/module-symfony": "^3.1",
         "symfony/maker-bundle": "^1.48"
     },
     "config": {
