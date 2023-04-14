@@ -4,6 +4,7 @@
 namespace App\Tests\Api;
 
 use App\Tests\ApiTester;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductsCest
 {
@@ -13,10 +14,37 @@ class ProductsCest
     }
 
     // tests
-    public function getProducts(ApiTester $I)
+    public function getProducts(ApiTester $I): void
     {
         $I->sendGet('/products');
         $I->canSeeResponseCodeIsSuccessful();
         $I->canSeeResponseIsJson();
+        $I->canSeeResponseMatchesJsonType(
+            [
+                'id' => 'integer',
+                'name' => 'string',
+                'price' => 'float'
+            ]
+        );
+    }
+
+    public function getProduct(ApiTester $I): void
+    {
+        $I->sendGet('/products/1');
+        $I->canSeeResponseCodeIsSuccessful();
+        $I->canSeeResponseIsJson();
+        $I->canSeeResponseMatchesJsonType(
+            [
+                'id' => 'integer',
+                'name' => 'string',
+                'price' => 'float'
+            ]
+        );
+    }
+
+    public function getNotFoundResponse(ApiTester $I): void
+    {
+        $I->sendGet('/products/11');
+        $I->canSeeResponseCodeIs(Response::HTTP_NOT_FOUND);
     }
 }
