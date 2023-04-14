@@ -19,6 +19,10 @@
     },
     "require-dev": {
         "codeception/codeception": "^5.0",
+        "codeception/module-asserts": "^3.0",
+        "codeception/module-doctrine2": "^3.0",
+        "codeception/module-phpbrowser": "^3.0",
+        "codeception/module-rest": "^3.3",
         "codeception/module-symfony": "^3.1",
         "symfony/maker-bundle": "^1.48"
     },
