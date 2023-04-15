@@ -13,12 +13,15 @@ class CartItem
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Product $product = null;
 
     #[ORM\Column]
     private int $quantity = 0;
+
+    #[ORM\ManyToOne(inversedBy: 'items')]
+    private ?Cart $cart = null;
 
     public function getId(): ?int
     {
@@ -70,5 +73,17 @@ class CartItem
         return 0 === $this->getQuantity()
             ? 0
             : $this->getQuantity() * $this->getProduct()->getPrice();
+    }
+
+    public function getCart(): ?Cart
+    {
+        return $this->cart;
+    }
+
+    public function setCart(?Cart $cart): self
+    {
+        $this->cart = $cart;
+
+        return $this;
     }
 }

@@ -27,7 +27,7 @@ class CartItemTest extends Unit
     }
 
     // tests
-    public function testCeateCartItem(): void
+    public function testCreateCartItem(): void
     {
         /** @var Product $product */
         $product = $this->em->find(Product::class, $this->testProducts['adidas']);
