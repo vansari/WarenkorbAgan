@@ -7,3 +7,9 @@ modules:
     enabled:
         - Asserts
         - \App\Tests\Helper\Unit
+        - Symfony:
+              app_path: 'src'
+              environment: 'test'
+        - Doctrine2:
+              depends: Symfony
+              cleanup: true
