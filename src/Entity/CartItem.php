@@ -36,7 +36,6 @@ class CartItem
     public function setProduct(Product $product): self
     {
         $this->product = $product;
-        $this->setQuantity(1);
 
         return $this;
     }
@@ -85,5 +84,10 @@ class CartItem
         $this->cart = $cart;
 
         return $this;
+    }
+
+    public function equals(self $item): bool
+    {
+        return $this->getProduct()->getId() === $item->getProduct()->getId();
     }
 }

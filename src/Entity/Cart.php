@@ -47,10 +47,16 @@ class Cart
 
     public function addItem(CartItem $item): self
     {
-        if (!$this->items->contains($item)) {
-            $this->items->add($item);
-            $item->setCart($this);
+        /** @var CartItem[] $existingItem */
+        foreach ($this->getItems() as $existingItem) {
+            if ($existingItem->equals($item)) {
+                $existingItem->setQuantity($existingItem->getQuantity() + $item->getQuantity());
+                return $this;
+            }
         }
+
+        $this->items->add($item);
+        $item->setCart($this);
 
         return $this;
     }
@@ -62,6 +68,15 @@ class Cart
             if ($item->getCart() === $this) {
                 $item->setCart(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function removeItems(): self
+    {
+        foreach ($this->getItems() as $item) {
+            $this->removeItem($item);
         }
 
         return $this;

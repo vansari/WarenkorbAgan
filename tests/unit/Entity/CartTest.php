@@ -95,4 +95,34 @@ class CartTest extends Unit
         $this->em->flush();
         $this->tester->dontSeeInRepository(Cart::class, ['id' => $id]);
     }
+
+    public function testDoIncrementToExistingItemIfProductExists(): void
+    {
+        /** @var CartItem $item */
+        $item = $this->em->find(CartItem::class, $this->testItems['adidas']);
+
+        $cart = new Cart();
+        $cart->addItem($item);
+
+        $this->em->persist($cart);
+        $this->em->flush();
+
+        $this->tester->assertCount(1, $cart->getItems());
+        $this->tester->assertNull($cart->getUpdatedAt());
+        $this->tester->assertNotNull($cart->getCreatedAt());
+
+        $item2 = new CartItem();
+        /** @var Product $product */
+        $product = $this->em->find(Product::class, $this->testProducts['adidas']);
+        $item2->setProduct($product);
+        $item2->setQuantity(3);
+        $cart->addItem($item2);
+
+        $this->em->persist($cart);
+        $this->em->flush();
+
+        $this->tester->assertCount(1, $cart->getItems());
+        $item = $cart->getItems()[0];
+        $this->tester->assertSame(4, $item->getQuantity());
+    }
 }
