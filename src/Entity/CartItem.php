@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CartItemRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: CartItemRepository::class)]
 class CartItem
@@ -13,7 +14,7 @@ class CartItem
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne]
+    #[ORM\OneToOne(targetEntity: Product::class, cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Product $product = null;
 
@@ -27,6 +28,7 @@ class CartItem
     {
         return $this->id;
     }
+
 
     public function getProduct(): ?Product
     {
@@ -74,6 +76,7 @@ class CartItem
             : $this->getQuantity() * $this->getProduct()->getPrice();
     }
 
+    #[Ignore]
     public function getCart(): ?Cart
     {
         return $this->cart;
