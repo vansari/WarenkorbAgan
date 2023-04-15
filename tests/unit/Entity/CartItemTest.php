@@ -43,36 +43,39 @@ class CartItemTest extends Unit
 
     public function testFetchCartItem(): void
     {
-        $id = $this->tester->haveInRepository(CartItem::class, ['product' => $this->testProducts['adidas'], 'quantity' => 1]);
+        $product = $this->em->find(Product::class, $this->testProducts['adidas']);
+        $id = $this->tester->haveInRepository(CartItem::class, ['product' => $product, 'quantity' => 1]);
         $item = $this->em->find(CartItem::class, $id);
         $this->tester->assertEquals($id, $item->getId());
     }
 
     public function testUpdateCartItem(): void
     {
-        $id = $this->tester->haveInRepository(CartItem::class, ['product' => $this->testProducts['adidas'], 'quantity' => 1]);
+        $productAdidas = $this->em->find(Product::class, $this->testProducts['adidas']);
+        $id = $this->tester->haveInRepository(CartItem::class, ['product' => $productAdidas, 'quantity' => 1]);
         /** @var CartItem $item */
         $item = $this->em->find(CartItem::class, $id);
         $this->tester->assertEquals($id, $item->getId());
         /** @var Product $product */
-        $product = $this->em->find(Product::class, $this->testProducts['Nike']);
+        $product = $this->em->find(Product::class, $this->testProducts['nike']);
         $item->setProduct($product);
         $this->em->persist($item);
         $this->em->flush();
         $this->tester->assertEquals($item->getProduct()->getId(), $product->getId());
-        $this->tester->seeInRepository(CartItem::class, ['id' => $item->getId(), 'product' => $product->getId(), 'quantity' => 1]);
-        $this->tester->dontSeeInRepository(CartItem::class, ['id' => $item->getId(), 'product' => $this->testProducts['adidas'], 'quantity' => 1]);
+        $this->tester->seeInRepository(CartItem::class, ['id' => $item->getId(), 'product' => $product, 'quantity' => 1]);
+        $this->tester->dontSeeInRepository(CartItem::class, ['id' => $item->getId(), 'product' => $productAdidas, 'quantity' => 1]);
     }
 
     public function testDeleteCartItem(): void
     {
-        $id = $this->tester->haveInRepository(CartItem::class, ['product' => $this->testProducts['adidas'], 'quantity' => 1]);
+        $productAdidas = $this->em->find(Product::class, $this->testProducts['adidas']);
+        $id = $this->tester->haveInRepository(CartItem::class, ['product' => $productAdidas, 'quantity' => 1]);
         /** @var CartItem $item */
         $item = $this->em->find(CartItem::class, $id);
         $this->tester->assertEquals($id, $item->getId());
         $this->em->remove($item);
         $this->em->flush();
-        $this->tester->dontSeeInRepository(CartItem::class, ['product' => $this->testProducts['adidas'], 'quantity' => 1]);
+        $this->tester->dontSeeInRepository(CartItem::class, ['id' => $id]);
     }
 
     public function testIncrementAndDecrementOfQuantity(): void
@@ -89,6 +92,21 @@ class CartItemTest extends Unit
 
         $cartItem->subtractOne();
         $this->tester->assertEquals(1, $cartItem->getQuantity());
+    }
 
+    public function testGetTotalOfProductQuantity(): void
+    {
+        $cartItem = new CartItem();
+        $this->assertEquals(0, $cartItem->getTotal());
+
+        $productAdidas = $this->em->find(Product::class, $this->testProducts['adidas']);
+        $id = $this->tester->haveInRepository(CartItem::class, ['product' => $productAdidas, 'quantity' => 1]);
+        /** @var CartItem $item */
+        $item = $this->em->find(CartItem::class, $id);
+        $this->assertEquals(199.99, $item->getTotal());
+        $item->addOne();
+        $this->assertEquals(399.98, $item->getTotal());
+        $item->subtractOne();
+        $this->assertEquals(199.99, $item->getTotal());
     }
 }
