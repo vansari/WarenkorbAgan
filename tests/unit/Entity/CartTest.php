@@ -125,4 +125,24 @@ class CartTest extends Unit
         $item = $cart->getItems()[0];
         $this->tester->assertSame(4, $item->getQuantity());
     }
+
+    public function testRemoveAllItems(): void
+    {
+        /** @var CartItem $item */
+        $item = $this->em->find(CartItem::class, $this->testItems['adidas']);
+        /** @var CartItem $item2 */
+        $item2 = $this->em->find(CartItem::class, $this->testItems['nike']);
+
+        $cart = new Cart();
+        $cart->addItem($item)->addItem($item2);
+
+        $this->em->persist($cart);
+        $this->em->flush();
+        $this->tester->assertCount(2, $cart->getItems());
+        $cart->removeItems();
+        $this->em->persist($cart);
+        $this->em->flush();
+        $this->tester->assertCount(0, $cart->getItems());
+
+    }
 }
