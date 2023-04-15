@@ -145,4 +145,20 @@ class CartTest extends Unit
         $this->tester->assertCount(0, $cart->getItems());
 
     }
+
+    public function testGetTotalOfCart(): void
+    {
+        /** @var CartItem $item */
+        $item = $this->em->find(CartItem::class, $this->testItems['adidas']);
+        /** @var CartItem $item2 */
+        $item2 = $this->em->find(CartItem::class, $this->testItems['nike']);
+
+        $cart = new Cart();
+        $cart->addItem($item);
+        $this->tester->assertSame($item->getTotal(), $cart->getTotal());
+        $cart->addItem($item2);
+        $this->tester->assertSame($item->getTotal() + $item2->getTotal(), $cart->getTotal());
+        $cart->removeItem($item);
+        $this->tester->assertSame($item2->getTotal(), $cart->getTotal());
+    }
 }

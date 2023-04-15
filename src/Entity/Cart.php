@@ -105,4 +105,14 @@ class Cart
         $this->updatedAt = new DateTimeImmutable();
         return $this;
     }
+
+    public function getTotal(): float
+    {
+        return array_sum(
+            array_map(
+                fn (CartItem $item): float => $item->getTotal(),
+                $this->getItems()->toArray()
+            )
+        );
+    }
 }
