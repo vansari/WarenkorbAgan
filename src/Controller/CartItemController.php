@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\CartItem;
 use App\Repository\CartItemRepository;
+use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,8 +15,10 @@ use Symfony\Component\Serializer\SerializerInterface;
 #[Route('/items')]
 class CartItemController extends AbstractController
 {
-    public function __construct(private readonly CartItemRepository $repository)
-    {
+    public function __construct(
+        private readonly CartItemRepository $repository,
+        private readonly ProductRepository $productRepository
+    ) {
 
     }
 
@@ -46,17 +49,25 @@ class CartItemController extends AbstractController
     }
 
     #[Route('', name: 'app_cart_item_create', methods: ['POST'])]
-    public function createItem(Request $request, SerializerInterface $serializer): Response|JsonResponse
+    public function createItem(Request $request): Response|JsonResponse
     {
-        $cartItem = $serializer->deserialize(
-            $request->getContent(),
-            CartItem::class,
-            'json'
-        );
+        $content = json_decode($request->getContent());
+        if (!property_exists($content, 'quantity') && !property_exists($content, 'product')) {
+            return new Response(status: Response::HTTP_BAD_REQUEST);
+        }
+
+        if (null === ($product = $this->productRepository->find($content->product))) {
+            return new Response('unknown product', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $cartItem = new CartItem();
+        $cartItem
+            ->setProduct($product)
+            ->setQuantity($content->quantity);
 
         $this->repository->save($cartItem, true);
 
-        return $this->json($cartItem);
+        return $this->json($cartItem, Response::HTTP_CREATED);
     }
 
     #[Route('/{id}', name: 'app_cart_item_delete', methods: ['DELETE'])]

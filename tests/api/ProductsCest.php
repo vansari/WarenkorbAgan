@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Tests\Api;
+namespace App\Tests\api;
 
 use App\Tests\ApiTester;
 use Symfony\Component\HttpFoundation\Response;

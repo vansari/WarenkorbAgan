@@ -14,7 +14,7 @@ class CartItem
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(targetEntity: Product::class, cascade: ['persist'])]
+    #[ORM\OneToOne(targetEntity: Product::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Product $product = null;
 
@@ -71,9 +71,7 @@ class CartItem
 
     public function getTotal(): float
     {
-        return 0 === $this->getQuantity()
-            ? 0
-            : $this->getQuantity() * $this->getProduct()->getPrice();
+        return $this->getQuantity() * $this->getProduct()->getPrice();
     }
 
     #[Ignore]
