@@ -1,15 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Tests\unit;
+namespace App\Tests\unit\Entity;
 
 use App\Entity\Product;
-use App\Repository\ProductRepository;
 use App\Tests\UnitTester;
 use Codeception\Test\Unit;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 class ProductTest extends Unit
 {
