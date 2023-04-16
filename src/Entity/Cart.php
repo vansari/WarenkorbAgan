@@ -22,7 +22,7 @@ class Cart
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToMany(mappedBy: 'cart', targetEntity: CartItem::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'cart', targetEntity: CartItem::class, cascade: ['persist', 'remove'], fetch: 'EAGER', orphanRemoval: true)]
     #[Groups(['cart:create', 'cart:update'])]
     #[Count(min: 1, groups: ['cart:create', 'cart:update'])]
     private Collection $items;
@@ -73,6 +73,17 @@ class Cart
             // set the owning side to null (unless already changed)
             if ($item->getCart() === $this) {
                 $item->setCart(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function removeItemById(int $id): self
+    {
+        foreach ($this->getItems() as $item) {
+            if ($item->getId() === $id) {
+                return $this->removeItem($item);
             }
         }
 

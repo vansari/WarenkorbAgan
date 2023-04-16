@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityNotFoundException;
 class CartHandler
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager
+        private readonly CartItemHandler $cartItemHandler
     ) {
 
     }
@@ -26,20 +26,22 @@ class CartHandler
         }
         $items = $data['items'];
         $cart = new Cart();
-        /** @var ProductRepository $productRepo */
-        $productRepo = $this->entityManager->getRepository(Product::class);
         foreach ($items as $item) {
-            $product = $productRepo->find($item['product']);
-            if (null === $product) {
-                throw new EntityNotFoundException('No product with Id ' . $item['product'] . ' found.');
-            }
-            $cartItem = (new CartItem())
-                ->setQuantity($item['quantity'] ?? 0)
-                ->setProduct($product);
+            $cartItem = $this->createFromItemArray($item);
 
             $cart->addItem($cartItem);
         }
 
         return $cart;
+    }
+
+    public function createFromItemArray(array $data): CartItem
+    {
+        return $this->cartItemHandler->createFromItemArray($data);
+    }
+
+    public function createFromItemJson(string $json): CartItem
+    {
+        return $this->cartItemHandler->createFromItemJson($json);
     }
 }

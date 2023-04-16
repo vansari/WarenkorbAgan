@@ -3,21 +3,21 @@
 namespace App\Controller;
 
 use App\Entity\CartItem;
+use App\Handler\CartItemHandler;
 use App\Repository\CartItemRepository;
-use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/items')]
 class CartItemController extends AbstractController
 {
     public function __construct(
         private readonly CartItemRepository $repository,
-        private readonly ProductRepository $productRepository
+        private readonly CartItemHandler $cartItemHandler
     ) {
 
     }
@@ -49,21 +49,13 @@ class CartItemController extends AbstractController
     }
 
     #[Route('', name: 'app_cart_item_create', methods: ['POST'])]
-    public function createItem(Request $request): Response|JsonResponse
+    public function createItem(Request $request, ValidatorInterface $validator): Response|JsonResponse
     {
-        $content = json_decode($request->getContent());
-        if (!property_exists($content, 'quantity') && !property_exists($content, 'product')) {
-            return new Response(status: Response::HTTP_BAD_REQUEST);
-        }
+        $cartItem = $this->cartItemHandler->createFromItemJson($request->getContent());
 
-        if (null === ($product = $this->productRepository->find($content->product))) {
-            return new Response('unknown product', Response::HTTP_UNPROCESSABLE_ENTITY);
+        if (($violations = $validator->validate($cartItem, groups: ['item:create']))->count()) {
+            return new Response($violations, status: Response::HTTP_BAD_REQUEST);
         }
-
-        $cartItem = new CartItem();
-        $cartItem
-            ->setProduct($product)
-            ->setQuantity($content->quantity);
 
         $this->repository->save($cartItem, true);
 
