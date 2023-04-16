@@ -4,7 +4,12 @@ namespace App\Entity;
 
 use App\Repository\CartItemRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\Positive;
 
 #[ORM\Entity(repositoryClass: CartItemRepository::class)]
 class CartItem
@@ -12,13 +17,17 @@ class CartItem
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['item:read', ])]
     private ?int $id = null;
 
-    #[ORM\OneToOne(targetEntity: Product::class)]
+    #[ORM\OneToOne(targetEntity: Product::class, fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['item:read'])]
     private ?Product $product = null;
 
     #[ORM\Column]
+    #[GreaterThan(0, groups: [ 'cart:create', 'cart:update', 'item:create', 'item:update',])]
+    #[Groups(['cart:create', 'cart:update', 'item:create', 'item:read', 'item:update',])]
     private int $quantity = 0;
 
     #[ORM\ManyToOne(inversedBy: 'items')]

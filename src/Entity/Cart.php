@@ -8,6 +8,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\Count;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 #[ORM\Entity(repositoryClass: CartRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -19,6 +23,8 @@ class Cart
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'cart', targetEntity: CartItem::class, cascade: ['persist', 'remove'])]
+    #[Groups(['cart:create', 'cart:update'])]
+    #[Count(min: 1, groups: ['cart:create', 'cart:update'])]
     private Collection $items;
 
     #[ORM\Column]

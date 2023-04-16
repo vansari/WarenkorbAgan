@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4cff6bcb6c85af95269c71146a72d725",
+    "content-hash": "603d543adcc7195c96ae9839986cedf2",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -5116,6 +5116,60 @@
                 "source": "https://github.com/Codeception/module-asserts/tree/3.0.0"
             },
             "time": "2022-02-16T19:48:08+00:00"
+        },
+        {
+            "name": "codeception/module-db",
+            "version": "3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Codeception/module-db.git",
+                "reference": "0ff358215efef8513869d407bb3bb850187975a3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Codeception/module-db/zipball/0ff358215efef8513869d407bb3bb850187975a3",
+                "reference": "0ff358215efef8513869d407bb3bb850187975a3",
+                "shasum": ""
+            },
+            "require": {
+                "codeception/codeception": "*@dev",
+                "ext-json": "*",
+                "ext-pdo": "*",
+                "php": "^8.0"
+            },
+            "conflict": {
+                "codeception/codeception": "<5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Bodnarchuk"
+                },
+                {
+                    "name": "Gintautas Miselis"
+                }
+            ],
+            "description": "DB module for Codeception",
+            "homepage": "https://codeception.com/",
+            "keywords": [
+                "codeception",
+                "database-testing",
+                "db-testing"
+            ],
+            "support": {
+                "issues": "https://github.com/Codeception/module-db/issues",
+                "source": "https://github.com/Codeception/module-db/tree/3.1.0"
+            },
+            "time": "2022-12-03T09:57:03+00:00"
         },
         {
             "name": "codeception/module-doctrine2",
