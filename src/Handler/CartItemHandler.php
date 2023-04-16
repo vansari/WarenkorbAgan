@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Entity\CartItem;
-use App\Repository\CartItemRepository;
 use App\Repository\ProductRepository;
 
 class CartItemHandler

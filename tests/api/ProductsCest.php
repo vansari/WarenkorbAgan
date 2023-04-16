@@ -3,6 +3,7 @@
 
 namespace App\Tests\api;
 
+use App\Entity\Product;
 use App\Tests\ApiTester;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -30,7 +31,8 @@ class ProductsCest
 
     public function getProduct(ApiTester $I): void
     {
-        $I->sendGet('/products/1');
+        $productId = $I->haveInRepository(Product::class, ['name' => 'Neue Schuhe', 'price' => 19.99]);
+        $I->sendGet('/products/' . $productId);
         $I->canSeeResponseCodeIsSuccessful();
         $I->canSeeResponseIsJson();
         $I->canSeeResponseMatchesJsonType(
@@ -44,7 +46,7 @@ class ProductsCest
 
     public function getNotFoundResponse(ApiTester $I): void
     {
-        $I->sendGet('/products/11');
+        $I->sendGet('/products/1111');
         $I->canSeeResponseCodeIs(Response::HTTP_NOT_FOUND);
     }
 }

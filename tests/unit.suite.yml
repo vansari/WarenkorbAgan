@@ -13,3 +13,7 @@ modules:
         - Doctrine2:
               depends: Symfony
               cleanup: true
+        - Db:
+            dsn: 'sqlite:relative/../var/app.db'
+            user: ''
+            password: ''

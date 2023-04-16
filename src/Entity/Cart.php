@@ -22,7 +22,13 @@ class Cart
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToMany(mappedBy: 'cart', targetEntity: CartItem::class, cascade: ['persist', 'remove'], fetch: 'EAGER', orphanRemoval: true)]
+    #[ORM\OneToMany(
+        mappedBy: 'cart',
+        targetEntity: CartItem::class,
+        cascade: ['persist', 'remove',],
+        fetch: 'EAGER',
+        orphanRemoval: true
+    )]
     #[Groups(['cart:create', 'cart:update'])]
     #[Count(min: 1, groups: ['cart:create', 'cart:update'])]
     private Collection $items;

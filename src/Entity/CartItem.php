@@ -80,7 +80,7 @@ class CartItem
 
     public function getTotal(): float
     {
-        return $this->getQuantity() * $this->getProduct()->getPrice();
+        return $this->getQuantity() * ($this->getProduct()?->getPrice() ?? 0);
     }
 
     #[Ignore]

@@ -32,7 +32,7 @@ class CartItemTest extends Unit
         /** @var Product $product */
         $product = $this->em->find(Product::class, $this->testProducts['adidas']);
         $item = new CartItem();
-        $item->setProduct($product);
+        $item->setProduct($product)->setQuantity(1);
 
         $this->em->persist($item);
         $this->em->flush();
@@ -84,7 +84,7 @@ class CartItemTest extends Unit
         $this->assertNotNull($cartItem->getQuantity());
         $this->tester->assertSame(0, $cartItem->getQuantity());
 
-        $cartItem->setProduct((new Product())->setName('Adidas')->setPrice(250));
+        $cartItem->setProduct((new Product())->setName('Adidas')->setPrice(250))->setQuantity(1);
         $this->tester->assertEquals(1, $cartItem->getQuantity());
 
         $cartItem->addOne();

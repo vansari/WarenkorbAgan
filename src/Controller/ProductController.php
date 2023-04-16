@@ -46,7 +46,7 @@ class ProductController extends AbstractController
     {
         $product = $this->repository->find($id);
         if (null === $product) {
-            return new Response(status: Response::HTTP_NOT_FOUND);
+            return new Response(null, status: Response::HTTP_NOT_FOUND);
         }
 
         return $this->json($product);
