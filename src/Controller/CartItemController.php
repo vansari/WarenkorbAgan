@@ -19,7 +19,6 @@ class CartItemController extends AbstractController
         private readonly CartItemRepository $repository,
         private readonly CartItemHandler $cartItemHandler
     ) {
-
     }
 
     #[Route('', name: 'app_cart_item_list', methods: ['GET'])]

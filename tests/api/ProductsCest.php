@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Tests\api;
 
 use App\Entity\Product;
@@ -11,7 +10,6 @@ class ProductsCest
 {
     public function _before(ApiTester $I)
     {
-
     }
 
     // tests

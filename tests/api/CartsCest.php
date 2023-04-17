@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Tests\api;
 
 use App\Entity\Cart;
@@ -32,7 +31,7 @@ class CartsCest
 
     public function createCart(ApiTester $I): void
     {
-        $I->haveHttpHeader('Content-Type','application/json');
+        $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPost(
             '/carts',
             [
@@ -59,7 +58,7 @@ class CartsCest
 
     public function createCartWillFailWithNoItems(ApiTester $I): void
     {
-        $I->haveHttpHeader('Content-Type','application/json');
+        $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPost(
             '/carts',
             [
@@ -71,7 +70,7 @@ class CartsCest
 
     public function createCartWillFailWithInvalidItems(ApiTester $I): void
     {
-        $I->haveHttpHeader('Content-Type','application/json');
+        $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPost(
             '/carts',
             [
@@ -87,7 +86,7 @@ class CartsCest
 
     public function addNewItemToCard(ApiTester $I): void
     {
-        $I->haveHttpHeader('Content-Type','application/json');
+        $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPost(
             '/carts',
             [
@@ -107,7 +106,7 @@ class CartsCest
         $I->seeInRepository(CartItem::class, ['id' => $result['items'][0]['id']]);
 
         $I->sendPut(
-            '/carts/'. $result['id'] . '/items',
+            '/carts/' . $result['id'] . '/items',
             [
                 'product' => $this->nikeProduct,
                 'quantity' => 2,
@@ -122,7 +121,7 @@ class CartsCest
 
     public function removeItemFromCard(ApiTester $I): void
     {
-        $I->haveHttpHeader('Content-Type','application/json');
+        $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPost(
             '/carts',
             [
@@ -142,7 +141,7 @@ class CartsCest
         $I->seeInRepository(CartItem::class, ['id' => $result['items'][0]['id']]);
 
         $I->sendDelete(
-            '/carts/'. $result['id'] . '/items/' . $result['items'][0]['id']
+            '/carts/' . $result['id'] . '/items/' . $result['items'][0]['id']
         );
         $I->canSeeResponseCodeIsSuccessful();
         $I->dontSeeInRepository(CartItem::class, ['id' => $result['items'][0]['id']]);

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -19,12 +20,10 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[Route('/carts')]
 class CartController extends AbstractController
 {
-
     public function __construct(
         private readonly CartRepository $cartRepository,
-        private readonly CartHandler    $cartHandler
+        private readonly CartHandler $cartHandler
     ) {
-
     }
     #[Route('', name: 'app_cart_list', methods: ['GET'])]
     public function getList(): JsonResponse

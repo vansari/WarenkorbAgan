@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Handler;
@@ -8,11 +9,9 @@ use App\Repository\ProductRepository;
 
 class CartItemHandler
 {
-
     public function __construct(
         private readonly ProductRepository $productRepository
     ) {
-
     }
 
     public function createFromItemJson(string $json): CartItem

@@ -15,10 +15,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class ProductController extends AbstractController
 {
-
     public function __construct(private readonly ProductRepository $repository)
     {
-
     }
 
     #[Route('/products', name: 'app_products_item_list', methods: ['GET'])]
@@ -53,8 +51,11 @@ class ProductController extends AbstractController
     }
 
     #[Route('/products/{id}', name: 'app_products_item_update', methods: ['PUT'])]
-    public function updateProduct(Request $request, SerializerInterface $serializer, Product $product): Response|JsonResponse
-    {
+    public function updateProduct(
+        Request $request,
+        SerializerInterface $serializer,
+        Product $product
+    ): Response|JsonResponse {
         $serializer->deserialize(
             $request->getContent(),
             Product::class,
