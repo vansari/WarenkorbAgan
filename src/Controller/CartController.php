@@ -55,7 +55,7 @@ class CartController extends AbstractController
         return $this->json($cart, Response::HTTP_CREATED);
     }
 
-    #[Route('/{id}/items', name: 'app_cart_add_item', methods: ['PUT'])]
+    #[Route('/{id}/items', name: 'app_cart_add_new_item', methods: ['PUT'])]
     public function addItemToCard(Request $request, ?Cart $cart, ValidatorInterface $validator): Response|JsonResponse
     {
         if (null === $cart) {
@@ -76,6 +76,21 @@ class CartController extends AbstractController
         }
 
         $this->cartRepository->save($cart, true);
+
+        return $this->json($cart);
+    }
+
+    #[Route('/{id}/items/{itemId}', name: 'app_cart_map_item', methods: ['PATCH'])]
+    public function mapItemToCard(?Cart $cart, int $itemId): Response|JsonResponse
+    {
+        if (null === $cart) {
+            return new Response(status: Response::HTTP_NOT_FOUND);
+        }
+        $item = $this->cartHandler->getCartItemFromId($itemId);
+        if (null === $item) {
+            return new JsonResponse('Item not Found', Response::HTTP_NOT_FOUND);
+        }
+        $this->cartRepository->save($cart->addItem($item), true);
 
         return $this->json($cart);
     }

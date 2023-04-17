@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Entity\CartItem;
+use App\Repository\CartItemRepository;
 use App\Repository\ProductRepository;
 
 class CartItemHandler
 {
     public function __construct(
-        private readonly ProductRepository $productRepository
+        private readonly ProductRepository $productRepository,
+        private readonly CartItemRepository $cartItemRepository
     ) {
     }
 
@@ -37,5 +39,10 @@ class CartItemHandler
         return $item
             ->setProduct($product)
             ->setQuantity($data['quantity'] ?? 0);
+    }
+
+    public function getCartItem(int $id): ?CartItem
+    {
+        return $this->cartItemRepository->find($id);
     }
 }

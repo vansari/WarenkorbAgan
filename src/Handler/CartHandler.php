@@ -48,4 +48,9 @@ class CartHandler
     {
         return $this->cartItemHandler->createFromItemJson($json);
     }
+
+    public function getCartItemFromId(int $itemId): ?CartItem
+    {
+        return $this->cartItemHandler->getCartItem($itemId);
+    }
 }

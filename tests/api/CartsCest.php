@@ -116,6 +116,41 @@ class CartsCest
         $I->assertSame(599.97, $newCart->getTotal());
     }
 
+    public function addExistingItemToCard(ApiTester $I): void
+    {
+        $product = $I->grabEntityFromRepository(Product::class, ['id' => $this->nikeProduct]);
+        $cartItemId = $I->haveInRepository(CartItem::class, ['product' => $product, 'quantity' => 1]);
+        $I->sendPost(
+            '/carts',
+            [
+                'items' => [
+                    [
+                        'product' => $this->adidasProduct,
+                        'quantity' => 1,
+                    ],
+                ]
+            ]
+        );
+        $I->canSeeResponseCodeIs(Response::HTTP_CREATED);
+        $I->canSeeResponseIsJson();
+        $result = json_decode($I->grabResponse(), true);
+        $I->assertNotNull($result['id']);
+        $I->seeInRepository(Cart::class, ['id' => $result['id']]);
+        $I->seeInRepository(CartItem::class, ['id' => $result['items'][0]['id']]);
+        $newCart = $I->grabEntityFromRepository(Cart::class, ['id' => $result['id']]);
+        $I->assertCount(1, $newCart->getItems());
+
+        $I->sendPatch(
+            '/carts/' . $result['id'] . '/items/' . $cartItemId
+        );
+        $I->canSeeResponseCodeIsSuccessful();
+        $I->canSeeResponseIsJson();
+        $result = json_decode($I->grabResponse(), true);
+        $newCart = $I->grabEntityFromRepository(Cart::class, ['id' => $result['id']]);
+        $I->assertSame(399.98, $newCart->getTotal());
+        $I->assertCount(2, $newCart->getItems());
+    }
+
     public function removeItemFromCard(ApiTester $I): void
     {
         $I->sendPost(

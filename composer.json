@@ -83,12 +83,18 @@
         "phpcs": "vendor/bin/phpcs",
         "phpcbf": "vendor/bin/phpcbf",
         "phpstan": "vendor/bin/phpstan --memory-limit=1G",
-        "test": [
-            "@lint",
-            "@phpcs",
-            "@phpstan",
+        "codecept": [
             "@unit-test",
             "@api-test"
+        ],
+        "static": [
+            "@lint",
+            "@phpcs",
+            "@phpstan"
+        ],
+        "test": [
+            "@static",
+            "@codecept"
         ]
     },
     "conflict": {
