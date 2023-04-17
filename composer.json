@@ -84,7 +84,10 @@
         "lint": "vendor/bin/phplint src tests",
         "phpcs": "vendor/bin/phpcs",
         "phpcbf": "vendor/bin/phpcbf",
-        "phpstan": "vendor/bin/phpstan --memory-limit=1G",
+        "phpstan": [
+            "vendor/bin/codecept build",
+            "vendor/bin/phpstan --memory-limit=1G"
+        ],
         "codecept": [
             "@unit-test",
             "@api-test"
