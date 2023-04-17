@@ -81,7 +81,7 @@ composer static
     "quantity": 1
 }
 ```
-[PATCH] `/carts/{id}/items` add Item to special cart (no payload required)
+[PATCH] `/carts/{id}/items/{itemId}` add Item to special cart (no payload required)
 
 [DELETE] `/carts/{id}/items/{itemId}` delete one item from cart
 
