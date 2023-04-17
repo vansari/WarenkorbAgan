@@ -11,6 +11,14 @@ class ProductsCest
     public function _before(ApiTester $I): void
     {
         $I->haveHttpHeader('Content-Type', 'application/json');
+        $I->haveInRepository(
+            Product::class,
+            ['name' => 'Adidas Schuhe', 'price' => 199.99]
+        );
+        $I->haveInRepository(
+            Product::class,
+            ['name' => 'Nike Schuhe', 'price' => 299.99]
+        );
     }
 
     // tests
