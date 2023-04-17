@@ -59,7 +59,7 @@ class Cart
 
     public function addItem(CartItem $item): self
     {
-        /** @var CartItem[] $existingItem */
+        /** @var CartItem $existingItem */
         foreach ($this->getItems() as $existingItem) {
             if ($existingItem->equals($item)) {
                 $existingItem->setQuantity($existingItem->getQuantity() + $item->getQuantity());

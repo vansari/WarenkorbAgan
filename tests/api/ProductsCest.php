@@ -8,8 +8,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ProductsCest
 {
-    public function _before(ApiTester $I)
+    public function _before(ApiTester $I): void
     {
+        $I->haveHttpHeader('Content-Type', 'application/json');
     }
 
     // tests

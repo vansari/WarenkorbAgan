@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Cart;
 use App\Entity\CartItem;
 use App\Handler\CartHandler;
+use App\Handler\ViolationHandler;
 use App\Repository\CartRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,14 +36,18 @@ class CartController extends AbstractController
     public function createCart(Request $request, ValidatorInterface $validation): Response|JsonResponse
     {
         $cart = $this->cartHandler->createFromCartJson($request->getContent());
-        $violation = $validation->validate($cart, groups: ['cart:create', 'item:create']);
-        if ($violation->count()) {
-            return new JsonResponse($violation, Response::HTTP_BAD_REQUEST);
+        if (($violation = $validation->validate($cart, groups: ['cart:create', 'item:create']))->count()) {
+            return new JsonResponse(
+                ViolationHandler::getJoinedViolationMessages($violation),
+                Response::HTTP_BAD_REQUEST
+            );
         }
         foreach ($cart->getItems() as $item) {
-            $violation = $validation->validate($item, groups: ['cart:create', 'item:create']);
-            if ($violation->count()) {
-                return new JsonResponse($violation, Response::HTTP_BAD_REQUEST);
+            if (($violation = $validation->validate($item, groups: ['cart:create', 'item:create']))->count()) {
+                return new JsonResponse(
+                    ViolationHandler::getJoinedViolationMessages($violation),
+                    Response::HTTP_BAD_REQUEST
+                );
             }
         }
         $this->cartRepository->save($cart, true);
@@ -64,7 +69,10 @@ class CartController extends AbstractController
 
         $cart->addItem($item);
         if (($violation = $validator->validate($cart, groups: ['item:create']))->count()) {
-            return new JsonResponse($violation, Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(
+                ViolationHandler::getJoinedViolationMessages($violation),
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         $this->cartRepository->save($cart, true);

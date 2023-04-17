@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\CartItem;
 use App\Handler\CartItemHandler;
+use App\Handler\ViolationHandler;
 use App\Repository\CartItemRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -53,7 +54,10 @@ class CartItemController extends AbstractController
         $cartItem = $this->cartItemHandler->createFromItemJson($request->getContent());
 
         if (($violations = $validator->validate($cartItem, groups: ['item:create']))->count()) {
-            return new Response($violations, status: Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(
+                ViolationHandler::getJoinedViolationMessages($violations),
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         $this->repository->save($cartItem, true);

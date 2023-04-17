@@ -1,0 +1,16 @@
+parameters:
+    level: 7
+    parallel:
+        maximumNumberOfProcesses: 10
+    paths:
+        - src
+        - tests
+    excludePaths:
+        analyse:
+            - vendor
+            - var
+            - .idea
+            - tests/_data/*
+            - tests/_output/*
+            - tests/_support/_generated/*
+    checkGenericClassInNonGenericObjectType: false

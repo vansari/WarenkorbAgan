@@ -20,70 +20,71 @@ class ItemsCest
     private ?int $adidasProduct = null;
     private ?int $nikeProduct = null;
 
-    public function _before(ApiTester $tester): void
+    public function _before(ApiTester $I): void
     {
-        $this->adidasProduct = $tester
+        $I->haveHttpHeader('Content-Type', 'application/json');
+        $this->adidasProduct = $I
             ->haveInRepository(
                 Product::class,
                 ['name' => 'adidas', 'price' => 199.99]
             );
-        $this->nikeProduct = $tester
+        $this->nikeProduct = $I
             ->haveInRepository(
                 Product::class,
                 ['name' => 'nike', 'price' => 199.99]
             );
     }
 
-    public function createItem(ApiTester $tester): void
+    public function createItem(ApiTester $I): void
     {
-        $tester->sendPost(
+        $I->sendPost(
             '/items',
-            json_encode([
+            [
                 'product' => $this->adidasProduct,
                 'quantity' => 1
-            ])
+            ]
         );
-        $tester->canSeeResponseCodeIs(Response::HTTP_CREATED);
+        $I->canSeeResponseCodeIs(Response::HTTP_CREATED);
     }
 
-    public function removeItem(ApiTester $tester): void
+    public function removeItem(ApiTester $I): void
     {
-        $tester->sendPost(
+        $I->sendPost(
             '/items',
-            json_encode([
+            [
                 'product' => $this->adidasProduct,
                 'quantity' => 1
-            ])
+            ]
         );
-        $tester->canSeeResponseCodeIs(Response::HTTP_CREATED);
-        $data = json_decode($tester->grabResponse());
+        $I->canSeeResponseCodeIs(Response::HTTP_CREATED);
+        $data = json_decode($I->grabResponse());
 
-        $tester->sendDelete('/items/' . $data->id);
-        $tester->dontSeeInRepository(CartItem::class, ['id' => $data->id]);
+        $I->sendDelete('/items/' . $data->id);
+        $I->dontSeeInRepository(CartItem::class, ['id' => $data->id]);
     }
 
-    public function getItems(ApiTester $tester): void
+    public function getItems(ApiTester $I): void
     {
-        $adidasProduct = $tester->grabEntityFromRepository(
+        $adidasProduct = $I->grabEntityFromRepository(
             Product::class,
             [
                 'id' => $this->adidasProduct,
             ]
         );
-        $nikeProduct = $tester->grabEntityFromRepository(
+        $nikeProduct = $I->grabEntityFromRepository(
             Product::class,
             [
                 'id' => $this->nikeProduct,
             ]
         );
-        $tester->haveInRepository(
+        $I->haveInRepository(
             CartItem::class,
             [
                 'product' => $adidasProduct,
                 'quantity' => 1,
             ]
         );
-        $tester->haveInRepository(
+        $I->haveInRepository(
             CartItem::class,
             [
                 'product' => $nikeProduct,
@@ -91,36 +92,36 @@ class ItemsCest
             ]
         );
 
-        $tester->sendGet('/items');
-        $tester->canSeeResponseCodeIsSuccessful();
-        $tester->canSeeResponseIsJson();
-        $tester->canSeeResponseMatchesJsonType(
+        $I->sendGet('/items');
+        $I->canSeeResponseCodeIsSuccessful();
+        $I->canSeeResponseIsJson();
+        $I->canSeeResponseMatchesJsonType(
             [
                 'id' => 'integer',
                 'product' => 'array',
                 'quantity' => 'integer'
             ]
         );
-        $data = json_decode($tester->grabResponse());
-        $tester->assertCount(2, $data);
+        $data = json_decode($I->grabResponse());
+        $I->assertCount(2, $data);
     }
 
-    public function getItem(ApiTester $tester): void
+    public function getItem(ApiTester $I): void
     {
-        $tester->sendPost(
+        $I->sendPost(
             '/items',
-            json_encode([
+            [
                 'product' => $this->adidasProduct,
                 'quantity' => 1
-            ])
+            ]
         );
-        $tester->canSeeResponseCodeIs(Response::HTTP_CREATED);
-        $data = json_decode($tester->grabResponse());
+        $I->canSeeResponseCodeIs(Response::HTTP_CREATED);
+        $data = json_decode($I->grabResponse());
 
-        $tester->sendGet('/items/' . $data->id);
-        $tester->canSeeResponseCodeIsSuccessful();
-        $tester->canSeeResponseIsJson();
-        $tester->canSeeResponseMatchesJsonType(
+        $I->sendGet('/items/' . $data->id);
+        $I->canSeeResponseCodeIsSuccessful();
+        $I->canSeeResponseIsJson();
+        $I->canSeeResponseMatchesJsonType(
             [
                 'id' => 'integer',
                 'product' => 'array',
@@ -129,23 +130,23 @@ class ItemsCest
         );
     }
 
-    public function patchItemAddQuantitySubtractQuantity(ApiTester $tester): void
+    public function patchItemAddQuantitySubtractQuantity(ApiTester $I): void
     {
-        $content = $tester->sendPost(
+        $content = $I->sendPost(
             '/items',
-            json_encode([
+            [
                 'product' => $this->adidasProduct,
                 'quantity' => 1
-            ])
+            ]
         );
         $data = json_decode($content);
         $oldQuantity = $data->quantity;
-        $content = $tester->sendPatch('/items/' . $data->id . '/add');
+        $content = $I->sendPatch('/items/' . $data->id . '/add');
         $data = json_decode($content);
-        $tester->assertSame($oldQuantity + 1, $data->quantity);
+        $I->assertSame($oldQuantity + 1, $data->quantity);
         $oldQuantity = $data->quantity;
-        $content = $tester->sendPatch('/items/' . $data->id . '/subtract');
+        $content = $I->sendPatch('/items/' . $data->id . '/subtract');
         $data = json_decode($content);
-        $tester->assertSame($oldQuantity - 1, $data->quantity);
+        $I->assertSame($oldQuantity - 1, $data->quantity);
     }
 }

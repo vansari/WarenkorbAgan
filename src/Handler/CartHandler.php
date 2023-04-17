@@ -35,6 +35,10 @@ class CartHandler
         return $cart;
     }
 
+    /**
+     * @param array<mixed> $data
+     * @return CartItem
+     */
     public function createFromItemArray(array $data): CartItem
     {
         return $this->cartItemHandler->createFromItemArray($data);

@@ -16,6 +16,7 @@ class CartsCest
 
     public function _before(ApiTester $I): void
     {
+        $I->haveHttpHeader('Content-Type', 'application/json');
         $this->adidasProduct = $I->haveInRepository(Product::class, ['name' => 'adidas', 'price' => 199.99]);
         $this->nikeProduct = $I->haveInRepository(Product::class, ['name' => 'nike', 'price' => 199.99]);
     }
@@ -31,7 +32,6 @@ class CartsCest
 
     public function createCart(ApiTester $I): void
     {
-        $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPost(
             '/carts',
             [
@@ -58,7 +58,6 @@ class CartsCest
 
     public function createCartWillFailWithNoItems(ApiTester $I): void
     {
-        $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPost(
             '/carts',
             [
@@ -70,7 +69,6 @@ class CartsCest
 
     public function createCartWillFailWithInvalidItems(ApiTester $I): void
     {
-        $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPost(
             '/carts',
             [
@@ -86,7 +84,6 @@ class CartsCest
 
     public function addNewItemToCard(ApiTester $I): void
     {
-        $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPost(
             '/carts',
             [
@@ -121,7 +118,6 @@ class CartsCest
 
     public function removeItemFromCard(ApiTester $I): void
     {
-        $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendPost(
             '/carts',
             [

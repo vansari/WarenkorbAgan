@@ -19,6 +19,10 @@ class CartItemHandler
         return $this->createFromItemArray(json_decode($json, true));
     }
 
+    /**
+     * @param array<mixed> $data
+     * @return CartItem
+     */
     public function createFromItemArray(array $data): CartItem
     {
         $item = new CartItem();
