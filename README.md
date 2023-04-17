@@ -1,3 +1,5 @@
+![workflow](https://github.com/vansari/WarenkorbAgan/actions/workflows/php.yml/badge.svg)
+
 ## Coding Challenge
 
 ### prepare workspace
