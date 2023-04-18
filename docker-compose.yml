@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  php:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: cli
+      args:
+        PHP_VERSION: 8.2
+    volumes:
+      - ./:/code
+    working_dir: /code
