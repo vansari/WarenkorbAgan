@@ -20,6 +20,7 @@ class Cart
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['cart:read'])]
     private ?int $id = null;
 
     #[ORM\OneToMany(
@@ -29,14 +30,16 @@ class Cart
         fetch: 'EAGER',
         orphanRemoval: true
     )]
-    #[Groups(['cart:create', 'cart:update'])]
+    #[Groups(['cart:create', 'cart:update', 'cart:read'])]
     #[Count(min: 1, groups: ['cart:create', 'cart:update'])]
     private Collection $items;
 
     #[ORM\Column]
+    #[Groups(['cart:read'])]
     private ?DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['cart:read'])]
     private ?DateTimeImmutable $updatedAt = null;
 
     public function __construct()

@@ -112,7 +112,14 @@ class CartTest extends Unit
         $this->em->flush();
 
         // Should be solved with EventSubscriber preUpdate
-        // $this->tester->assertNotNull($cart->getUpdatedAt());
+        $updatedAt = $cart->getUpdatedAt();
+        $this->tester->assertNotNull($updatedAt);
+        $cart->removeItem($itemNike);
+        sleep(1);
+        $this->em->persist($cart);
+        $this->em->flush();
+
+        $this->assertNotSame($updatedAt->format(DATE_RFC3339), $cart->getUpdatedAt()->format(DATE_RFC3339));
     }
 
     public function testDeleteCartItem(): void
