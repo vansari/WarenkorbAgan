@@ -135,6 +135,7 @@ class CartsCest
         $I->canSeeResponseIsJson();
         $result = json_decode($I->grabResponse(), true);
         $I->assertNotNull($result['id']);
+        $I->assertNull($result['updatedAt']);
         $I->seeInRepository(Cart::class, ['id' => $result['id']]);
         $I->seeInRepository(CartItem::class, ['id' => $result['items'][0]['id']]);
         $newCart = $I->grabEntityFromRepository(Cart::class, ['id' => $result['id']]);
@@ -149,6 +150,7 @@ class CartsCest
         $newCart = $I->grabEntityFromRepository(Cart::class, ['id' => $result['id']]);
         $I->assertSame(399.98, $newCart->getTotal());
         $I->assertCount(2, $newCart->getItems());
+        $I->assertNotNull($result['updatedAt']);
     }
 
     public function removeItemFromCard(ApiTester $I): void

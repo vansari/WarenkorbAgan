@@ -22,7 +22,7 @@ class CartUpdated
         $uow = $manager->getUnitOfWork();
         /** @var Cart[] $carts */
         $carts = [];
-        /** @var ArrayCollection $collectionDeletion */
+        /** @var ArrayCollection $collectionUpdate */
         foreach ($uow->getScheduledCollectionUpdates() as $collectionUpdate) {
             $carts = array_merge(
                 $carts,
@@ -34,6 +34,7 @@ class CartUpdated
                 )
             );
         }
+        /** @var ArrayCollection $collectionDeletion */
         foreach ($uow->getScheduledCollectionDeletions() as $collectionDeletion) {
             $carts = array_merge(
                 $carts,
@@ -57,7 +58,7 @@ class CartUpdated
 
     private function isNewChildOfExistingParent(object $entity): ?Cart
     {
-        return $entity instanceof CartItem && $entity->getCart()->getId()
+        return $entity instanceof CartItem && $entity->getCart()?->getId()
             ? $entity->getCart()
             : null;
     }
